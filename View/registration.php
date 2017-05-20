@@ -6,8 +6,8 @@ include('header.php');
     <head>
         <meta charset="UTF-8">
         <title>Nebraska Tennis League-Registration</title>
-        <link rel="stylesheet" type="text/css" href="http://localhost/17SPgroup4/stickman4/View/main.css"/>
-        <link rel="stylesheet" href="http://localhost/17SPgroup4/stickman4/View/nav.css">
+        <link rel="stylesheet" type="text/css" href="http://localhost/Tennis/View/main.css"/>
+        <link rel="stylesheet" href="http://localhost/Tennis/View/nav.css">
         <link href="https://fonts.googleapis.com/css?family=Palanquin+Dark" rel="stylesheet">
     </head>
     <body>
