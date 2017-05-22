@@ -1,5 +1,11 @@
 <?php
+
 session_start();
+
+require('Model/database.php');
+require('Model/UserDb.php');
+require('Model/User.php');
+require('Model/database_error.php');
 
 //require('Model/database.php');
 //require('Model/UserDb.php');
@@ -14,8 +20,6 @@ if ($action === NULL) {
         $action = 'initiallogin';
     }
 }
-
-
 switch ($action) {
     case 'initiallogin':
         include 'View/login.php';
@@ -24,8 +28,9 @@ switch ($action) {
         $_SESSION['Profile']['UserName']="";
             $_SESSION['Profile']['FirstName']="";
             $_SESSION['Profile']['LastName']="";
-            $_SESSION['Profile']['Email']="";
-            $_SESSION['Profile']['Image']="";
+            $_SESSION['Profile']['EMail']="";
+            $_SESSION['Profile']['Admin']="";
+            $_SESSION['Profile']['Phone']="";
         include('View/login.php');
         break;
 
@@ -54,19 +59,17 @@ switch ($action) {
             $_SESSION['Profile']['UserName']=$profile['UserName'];
             $_SESSION['Profile']['FirstName']=$profile['FirstName'];
             $_SESSION['Profile']['LastName']=$profile['LastName'];
-            $_SESSION['Profile']['Email']=$profile['Email'];
-            $_SESSION['Profile']['Image']=$profile['Image'];
+            $_SESSION['Profile']['EMail']=$profile['EMail'];
+            $_SESSION['Profile']['Admin']=$profile['Admin'];
+            $_SESSION['Profile']['Phone']=$profile['Phone'];
             endforeach;
             include('View/profile.php');
             break;
         } else {
             $loginError="Incorrect username or password";
             include('View/login.php');
-
-
             break;
         }
-
     case 'profile':
         include('View/profile.php');
         break;
@@ -79,6 +82,7 @@ switch ($action) {
         $email_address = filter_input(INPUT_POST, 'email_address', FILTER_VALIDATE_EMAIL);
         $password = filter_input(INPUT_POST, 'password');
         $user_name = filter_input(INPUT_POST, 'user_name');
+        $phone = filter_input(INPUT_POST, 'phone');
         $bValidate = true;
         if ($first_name === null) {
             $errors = array();
@@ -184,7 +188,7 @@ switch ($action) {
         if($bValidate && $bPregCheck){
             //this gets hit if it passes all validation
             $theUser = new User();
-            $theUser->_construct($user_name, $password, $email_address, $first_name, $last_name, "");
+            $theUser->_construct($user_name, "",$password, $email_address, $first_name, $last_name, $phone);
             if (!$theUser->CheckUserName()) {
                 if ($theUser->createUser()) {
                     include('View/confirmation.php');                    

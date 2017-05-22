@@ -18,7 +18,7 @@ include('header.php');
             <input type="text" name="user_name" class="textboxes" value="<?php if (isset($user_name)) { echo $user_name; } ?>"><br>
             <br>
             <label>Password: </label>
-            <input type="text" name="password" class="textboxes" value="<?php if (isset($password)) { echo $password; } ?>"><br>
+            <input type="password" name="password" class="textboxes" value="<?php if (isset($password)) { echo $password; } ?>"><br>
             <br>
             <label><?php if (isset($loginError)) { echo $loginError; } ?></label>
             <br>
