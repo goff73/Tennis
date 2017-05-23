@@ -8,7 +8,7 @@ include('header.php');
     <head>
         <meta charset="UTF-8">
         <title>Profile Page</title>
-<!--        <link rel="stylesheet" type="text/css" href="http://localhost/17SPgroup4/stickman4/View/main.css"/>-->
+        <!--        <link rel="stylesheet" type="text/css" href="http://localhost/17SPgroup4/stickman4/View/main.css"/>-->
         <link href="https://fonts.googleapis.com/css?family=Palanquin+Dark" rel="stylesheet">
     </head>
     <body>
@@ -57,16 +57,53 @@ include('header.php');
                             <th>Number Of Losses</th>
                         </tr>
                         <tr>
-                                            <?php 
-                    foreach ($leaderboardInfo as $inList):
-                        $player=htmlspecialchars($inList['PlayerName']);
-                        $wins=htmlspecialchars($inList['NumberOfWins']);
-                        $losses=htmlspecialchars($inList['NumberOfLosses']);?>
-                            <td><?php echo $player;?></td>
-                            <td><?php echo $wins;?></td>
-                            <td><?php echo $losses;?></td>
+                            <?php
+                            foreach ($leaderboardInfo as $inList):
+                                $player = htmlspecialchars($inList['PlayerName']);
+                                $wins = htmlspecialchars($inList['NumberOfWins']);
+                                $losses = htmlspecialchars($inList['NumberOfLosses']);
+                                ?>
+                                <td><?php echo $player; ?></td>
+                                <td><?php echo $wins; ?></td>
+                                <td><?php echo $losses; ?></td>
+                            </tr>
+<?php endforeach; ?>
+                    </table>
+
+                </div>
+
+                <div id='schedule'>
+                    <h2>Schedule</h2>
+                    <table>
+                        <tr>
+                            <th>Match Date</th>
+                            <th>Opponent</th>
+                            <th>Result</th>
                         </tr>
-                     <?php endforeach; ?>
+                        <tr>
+                            <?php
+                            foreach ($scheduleInfo as $inList):
+                                $matchid = htmlspecialchars($inList['MatchId']);
+                                $matchdate = htmlspecialchars($inList['MatchDate']);
+                                $opponent = htmlspecialchars($inList['Opponent']);
+                                $result = htmlspecialchars($inList['Result']);
+                                ?>
+                                <td><?php echo $matchdate; ?></td>
+                                <td><?php echo $opponent; ?></td>
+                                <td><?php
+                                if (strpos($result, 'enter') === false) {
+                                    echo $result;
+                                } else {
+                                    echo '<form action="index.php" method="post">
+                                            <input type="hidden" name="action" value="enterresult"> 
+                                            <input type="hidden" name="matchid" value="'.$matchid.'">
+                                            <input type="submit" value="enter" name="enter">
+                                        </form>';
+                                }
+                                ?>
+                                </td>
+                            </tr>
+<?php endforeach; ?>
                     </table>
 
                 </div>
@@ -77,7 +114,7 @@ include('header.php');
             </main>
         </div>
 
-        <?php include 'view/footer.php'; ?>
+<?php include 'view/footer.php'; ?>
     </body>
 </html>
 

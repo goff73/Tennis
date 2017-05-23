@@ -31,6 +31,7 @@ switch ($action) {
             $_SESSION['Profile']['EMail']="";
             $_SESSION['Profile']['Admin']="";
             $_SESSION['Profile']['Phone']="";
+            $_SESSION['Profile']['PlayerId']="";
         include('View/login.php');
         break;
 
@@ -62,6 +63,7 @@ switch ($action) {
             $_SESSION['Profile']['EMail']=$profile['EMail'];
             $_SESSION['Profile']['Admin']=$profile['Admin'];
             $_SESSION['Profile']['Phone']=$profile['Phone'];
+            $_SESSION['Profile']['PlayerId']=$profile['PlayerId'];
             endforeach;
             include('View/profile.php');
             break;
@@ -74,7 +76,13 @@ switch ($action) {
         $theUser = new User();
         $leaderboardInfo=array();
         $leaderboardInfo=$theUser->getLeaderboardInfo();
+        $scheduleInfo=array();
+        $scheduleInfo=$theUser->getScheduleInfo($_SESSION['Profile']['PlayerId']);
         include('View/profile.php');
+        break;
+    case 'enterresult':
+        $matchid = filter_input(INPUT_POST, 'matchid');
+        include('View/enterresult.php');
         break;
     case 'registration':
         include('View/registration.php');
