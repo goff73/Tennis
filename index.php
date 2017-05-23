@@ -3,8 +3,8 @@
 session_start();
 
 require('Model/database.php');
-require('Model/UserDb.php');
 require('Model/User.php');
+require('Model/UserDb.php');
 require('Model/database_error.php');
 
 //require('Model/database.php');
@@ -71,6 +71,9 @@ switch ($action) {
             break;
         }
     case 'profile':
+        $theUser = new User();
+        $leaderboardInfo=array();
+        $leaderboardInfo=$theUser->getLeaderboardInfo();
         include('View/profile.php');
         break;
     case 'registration':
