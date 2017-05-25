@@ -82,6 +82,8 @@ switch ($action) {
         break;
     case 'enterresult':
         $matchid = filter_input(INPUT_POST, 'matchid');
+        $player1=getMatchPlayers($matchid)['Player1'];
+        $player2=getMatchPlayers($matchid)['Player2'];
         include('View/enterresult.php');
         break;
     case 'registration':

@@ -23,14 +23,14 @@ include('header.php');
 
                         <select id="winner" name="winner">                      
                             <option value="0">--Select Winner--</option>
-                            <option value="1">Bryan</option>
-                            <option value="2">Justin</option>
+                            <option value="1"><?php echo $player1 ?></option>
+                            <option value="2"><?php echo $player2 ?></option>
                         </select>
 
                         <select id="loser" name="loser">                      
                             <option value="0">--Select Loser--</option>
-                            <option value="1">Bryan</option>
-                            <option value="2">Justin</option>
+                            <option value="1"><?php echo $player1 ?></option>
+                            <option value="2"><?php echo $player2 ?></option>
                         </select>
 
                         <label class="set1label" >Set 1:</label>
