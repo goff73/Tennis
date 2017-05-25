@@ -17,20 +17,21 @@ include('header.php');
                 <div id="result">
                     <h2>Enter Results</h2>
                     
-                    <form>  
+                    <form method="post" action="index.php">  
+                        <input type="hidden" name="action" value="writeresult"> 
                         <label class="dateplayed" >Match Date:</label>
-                        <input class="dateplayed" type="text" name="dateplayed" placeholder="mm/dd/yyyy">
+                        <input class="dateplayed" type="date" name="matchdate" placeholder="mm/dd/yyyy">
 
-                        <select id="winner" name="winner">                      
+                        <select id="winner" name="winningplayer">                      
                             <option value="0">--Select Winner--</option>
-                            <option value="1"><?php echo $player1 ?></option>
-                            <option value="2"><?php echo $player2 ?></option>
+                            <option value="<?php echo $player1id ?>"><?php echo $player1 ?></option>
+                            <option value="<?php echo $player2id ?>"><?php echo $player2 ?></option>
                         </select>
 
-                        <select id="loser" name="loser">                      
+                        <select id="loser" name="losingplayer">                      
                             <option value="0">--Select Loser--</option>
-                            <option value="1"><?php echo $player1 ?></option>
-                            <option value="2"><?php echo $player2 ?></option>
+                            <option value="<?php echo $player1id ?>"><?php echo $player1 ?></option>
+                            <option value="<?php echo $player2id ?>"><?php echo $player2 ?></option>
                         </select>
 
                         <label class="set1label" >Set 1:</label>
@@ -44,7 +45,7 @@ include('header.php');
                         <label class="set3label" >Set 3:</label>
                         <input id="winnerset3" type="text" name="winnerset3" >
                         <input id="loserset3" type="text" name="loserset3" >
-                        
+                        <input type="hidden" value="<?php echo $matchid ?>" name="matchid">
                         <input type="submit" value="writeresult" name="writeresult">
                     </form>  
                     

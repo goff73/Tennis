@@ -80,12 +80,31 @@ switch ($action) {
         $scheduleInfo=$theUser->getScheduleInfo($_SESSION['Profile']['PlayerId']);
         include('View/profile.php');
         break;
-    case 'enterresult':
+    case 'startresult':
         $matchid = filter_input(INPUT_POST, 'matchid');
         $player1=getMatchPlayers($matchid)['Player1'];
+        $player1id=getMatchPlayers($matchid)['Player1Id'];
         $player2=getMatchPlayers($matchid)['Player2'];
-        include('View/enterresult.php');
+        $player2id=getMatchPlayers($matchid)['Player2Id'];
+        include('View/startresult.php');
         break;
+    case 'writeresult':
+        $matchid = filter_input(INPUT_POST, 'matchid');
+        $matchdate = filter_input(INPUT_POST, 'matchdate');
+        $winningplayer=filter_input(INPUT_POST, 'winningplayer');
+        $losingplayer=filter_input(INPUT_POST, 'losingplayer');
+        $winnerset1=filter_input(INPUT_POST, 'winnerset1');
+        $winnerset2=filter_input(INPUT_POST, 'winnerset2');
+        $winnerset3=filter_input(INPUT_POST, 'winnerset3');
+        $loserset1=filter_input(INPUT_POST, 'loserset1');
+        $loserset2=filter_input(INPUT_POST, 'loserset2');
+        $loserset3=filter_input(INPUT_POST, 'loserset3');
+
+        $theUser=new User();
+        $theUser->writeMatch($matchid, $matchdate, $winningplayer, $losingplayer, $winnerset1, $winnerset2, $winnerset3, $loserset1, $loserset2, $loserset3);
+            include ('View/profile.php');
+            break;
+        
     case 'registration':
         include('View/registration.php');
         break;

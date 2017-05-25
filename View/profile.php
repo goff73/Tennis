@@ -95,7 +95,7 @@ include('header.php');
                                     echo $result;
                                 } else {
                                     echo '<form action="index.php" method="post">
-                                            <input type="hidden" name="action" value="enterresult"> 
+                                            <input type="hidden" name="action" value="startresult"> 
                                             <input type="hidden" name="matchid" value="'.$matchid.'">
                                             <input type="submit" value="enter" name="enter">
                                         </form>';
