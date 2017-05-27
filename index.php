@@ -1,5 +1,6 @@
 <?php
 
+
 session_start();
 
 require('Model/database.php');
@@ -20,6 +21,9 @@ if ($action === NULL) {
         $action = 'initiallogin';
     }
 }
+
+
+
 switch ($action) {
     case 'initiallogin':
         include 'View/login.php';
@@ -34,6 +38,149 @@ switch ($action) {
             $_SESSION['Profile']['PlayerId']="";
         include('View/login.php');
         break;
+    
+    case 'initialedit':
+        include 'View/changeinfo.php';
+        break;
+    
+    case 'edit':
+            //grabbing values from page
+            $first_name = filter_input(INPUT_POST, 'first_name');
+            $last_name = filter_input(INPUT_POST, 'last_name');
+            $email_address = filter_input(INPUT_POST, 'email_address', FILTER_VALIDATE_EMAIL);
+            $phone = filter_input(INPUT_POST, 'phone');
+            $password = filter_input(INPUT_POST, 'password');
+            $bValidate = true;
+            if(!preg_match('/^[A-Za-z]/',$first_name) || !preg_match('/^[A-Za-z]/',$last_name) || $first_name === null || $last_name === null || ($email_address === null || filter_input(INPUT_POST, 'email_address') === "") || strlen($password) === 0 || (!preg_match('/^[A-Z][A-Z]*$/',$password) || !preg_match('/^[a-z][a-z]*$/',$password) || !preg_match('/^[0-9]/',$password) || !preg_match('/[^\w]/',$password) || !preg_match('/^.{10,25}$/',$password))){
+                $errors = array();
+            }
+            //validate values
+            $bPregCheck = true;
+            if (strlen($first_name) === 0) {
+            $errors[] = 'First Name is Required';
+            $bValidate = False;
+            $bPregCheck = False;
+        }
+        if (strlen($last_name) === 0) {
+            $errors[] = 'Last Name is Required';
+            $bValidate = False;
+            $bPregCheck = False;
+        }
+        if (strlen($password) === 0) {
+            $errors[] = 'Password is required';
+            $bValidate = False;
+            $bPregCheck = False;
+        }
+        else{
+            $bPregCheck = true;
+            //this needs to be reviewed.  Where it says it needs a number for the password.
+            if(!preg_match('/[A-Z]/',$password))
+            {
+                
+                $errors[] = 'The Password requires an uppercase letter';
+                $bPregCheck = false;
+                
+            }
+            if(!preg_match('/[a-z]/',$password))
+            {
+                $errors[] = 'The Password requires a lowercase letter';
+                $bPregCheck = false;                
+            }
+            if(!preg_match('/[0-9]/',$password))
+            {
+                $errors[] = 'The password requires a number';
+                $bPregCheck = false;                
+            }
+            if(!preg_match('/[^\w]/',$password))
+            {
+                $errors[] = 'The password requires a symbol';
+                $bPregCheck = false;                
+            }
+            if(!preg_match('/^.{10,25}$/',$password))
+            {
+                $errors[] = 'The password length must be between 10-25 characters';
+                $bPregCheck = false;                
+            }
+            //TOPOLOGIES SECTION
+            if(preg_match('/^[A-Z][a-z]{5}[0-9]{4}[\W]{1}$/',$password))
+            {
+                $errors[] = 'Your password is not complex enough. It matched format (Sssss1111!) which is a common password';
+                $bPregCheck = false;                
+            }
+            if(preg_match('/^[A-Z][a-z]{7}[0-9]{2}[\W]{1}$/',$password))
+            {
+                $errors[] = 'Your password is not complex enough. It matched format (Ssssssss11!) which is a common password';
+                $bPregCheck = false;                
+            }
+            if(preg_match('/^[A-Z][a-z]{6}[0-9]{4}[\W]{1}$/',$password))
+            {
+                $errors[] = 'Your password is not complex enough. It matched format (Sssssss1111!) which is a common password';
+                $bPregCheck = false;                
+            }
+            if(preg_match('/^[\W][A-Z]{1}[a-z]{5}[0-9]{4}[\W]{1}$/',$password))
+            {
+                $errors[] = 'Your password is not complex enough. It matched format (!Ssssss1111) which is a common password';
+                $bPregCheck = false;                
+            }
+            if(preg_match('/^[0-9][A-Z]{1}[a-z]{5}[0-9]{4}[\W]{1}$/',$password))
+            {
+                 $errors[] = 'Your password is not complex enough. It matched format (1Ssssss1111!) which is a common password';
+                $bPregCheck = false;                
+            }
+            //END TOPOLOGIES SECTION
+        }
+        
+            if(!preg_match('/^[A-Za-z]/',$first_name)){
+            $errors[] = 'Your first name has to start with a letter';
+                $bPregCheck = false; 
+            }
+            if(!preg_match('/^[A-Za-z]/',$last_name)){
+            $errors[] = 'Your last name has to start with a letter';
+                $bPregCheck = false; 
+            }
+            
+            if ($email_address === null || filter_input(INPUT_POST, 'email_address') === "") {
+            $errors[] = 'Email is Required';
+            $bValidate = False;
+            $bPregCheck = False;
+        } else if (!$email_address) {
+            $errors[] = 'Email is in incorrect format';
+            $bValidate = False;
+            $bPregCheck = False;
+        }
+        
+        
+            if(!$bPregCheck)
+            {
+                $bValidate = False;
+                include('View/changeinfo.php');
+                break;
+            }
+            else{
+                //validated so db call for update
+                $theUser = new User();
+                if($theUser->updateTheUser( $_SESSION['Profile']['UserName'], $first_name, $last_name, $email_address, $phone, $password))
+                {
+                    $_SESSION['Profile']['FirstName']=$first_name;
+                    $_SESSION['Profile']['LastName']=$last_name;
+                    $_SESSION['Profile']['Email']=$email_address;
+                    $_SESSION['Profile']['Phone']=$phone;
+                    $theUser = new User();
+                $leaderboardInfo=array();
+                $leaderboardInfo=$theUser->getLeaderboardInfo();
+                $scheduleInfo=array();
+                $scheduleInfo=$theUser->getScheduleInfo($_SESSION['Profile']['PlayerId']);
+                    include('View/profile.php');
+                    break;
+                }
+                else{
+                    $errors = array();
+                    $errors[] = 'Update was unsuccessful';
+                    include('View/profile.php');
+                    break;
+                }
+                
+            }
 
     case 'login':
         $user_name = filter_input(INPUT_POST, 'user_name');
@@ -65,11 +212,7 @@ switch ($action) {
             $_SESSION['Profile']['Phone']=$profile['Phone'];
             $_SESSION['Profile']['PlayerId']=$profile['PlayerId'];
             endforeach;
-            $theUser = new User();
-            $leaderboardInfo=array();
-            $leaderboardInfo=$theUser->getLeaderboardInfo();
-            $scheduleInfo=array();
-            $scheduleInfo=$theUser->getScheduleInfo($_SESSION['Profile']['PlayerId']);
+            GrabProfileInfo();
             include('View/profile.php');
             break;
         } else {
@@ -336,6 +479,6 @@ switch ($action) {
             }
         }
         
-
+    
 }
 ?>

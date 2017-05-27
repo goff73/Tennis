@@ -18,9 +18,9 @@ include('header.php');
                 <div id="profile_pic">
                     <h1><?php
                         if (isset($_SESSION['Profile']['UserName'])) {
-                            echo htmlspecialchars($_SESSION['Profile']['FirstName'] . " " . $_SESSION['Profile']['LastName']) . "'s";
+                            echo htmlspecialchars("Welcome ".$_SESSION['Profile']['FirstName'] . " " . $_SESSION['Profile']['LastName']);
                         }
-                        ?> Page</h1>
+                        ?></h1>
 
                     <table>
                         <tr> 
@@ -44,6 +44,10 @@ include('header.php');
                             <td><?php echo htmlspecialchars($_SESSION['Profile']['EMail']) ?></td>
                         </tr>
                     </table>
+                    
+                    <p>
+                        <a href="index.php?action=initialedit"><?php if(isset($_SESSION['Profile']['UserName'])&&!empty($_SESSION['Profile']['UserName'])){echo htmlspecialchars('Edit Information');} ?></a>
+                    </p>
 
                 </div>
 
@@ -79,6 +83,8 @@ include('header.php');
                             <th>Match Date</th>
                             <th>Opponent</th>
                             <th>Result</th>
+                            <th>Email</th>
+                            <th>Phone</th>
                         </tr>
                         <tr>
                             <?php
@@ -86,6 +92,8 @@ include('header.php');
                                 $matchid = htmlspecialchars($inList['MatchId']);
                                 $matchdate = htmlspecialchars($inList['MatchDate']);
                                 $opponent = htmlspecialchars($inList['Opponent']);
+                                $opponentphone=htmlspecialchars($inList['OpponentPhone']);
+                                $opponentemail=htmlspecialchars($inList['OpponentEMail']);
                                 $result = htmlspecialchars($inList['Result']);
                                 ?>
                                 <td><?php echo $matchdate; ?></td>
@@ -102,6 +110,8 @@ include('header.php');
                                 }
                                 ?>
                                 </td>
+                                <td><?php echo $opponentemail?></td>
+                                <td><?php echo $opponentphone?></td>
                             </tr>
 <?php endforeach; ?>
                     </table>
