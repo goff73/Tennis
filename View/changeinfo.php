@@ -8,7 +8,7 @@ include('header.php');
 <head>
         <meta charset="UTF-8">
         <title>Change Info Page</title>
-        <link rel="stylesheet" type="text/css" href="/17SPgroup4/stickman4/View/main.css"/>
+        <link rel="stylesheet" type="text/css" href="/Tennis/View/main.css"/>
         <link href="https://fonts.googleapis.com/css?family=Palanquin+Dark" rel="stylesheet">
     </head>
     <body>
@@ -40,6 +40,7 @@ include('header.php');
                 <input type="text" name="email_address" class="textboxes" value="<?php if (isset($_SESSION['Profile']['EMail'])) {
                     echo htmlspecialchars($_SESSION['Profile']['EMail']);
                 } ?>"><br>
+                <br>
                 <label>Phone: </label>
                 <input type="text" name="phone" class="textboxes" value="<?php if (isset($_SESSION['Profile']['Phone'])) {
                     echo htmlspecialchars($_SESSION['Profile']['Phone']);
@@ -47,6 +48,7 @@ include('header.php');
                 <br>
                 <label>Password: </label>
                 <input type="text" name="password" class="textboxes" value=""><br>
+                <br>
                 <input type="hidden" name= "action" value="edit">
                 <input type="submit" value="Update Info">
             </form>
