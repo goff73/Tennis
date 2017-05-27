@@ -65,6 +65,11 @@ switch ($action) {
             $_SESSION['Profile']['Phone']=$profile['Phone'];
             $_SESSION['Profile']['PlayerId']=$profile['PlayerId'];
             endforeach;
+            $theUser = new User();
+            $leaderboardInfo=array();
+            $leaderboardInfo=$theUser->getLeaderboardInfo();
+            $scheduleInfo=array();
+            $scheduleInfo=$theUser->getScheduleInfo($_SESSION['Profile']['PlayerId']);
             include('View/profile.php');
             break;
         } else {
@@ -99,11 +104,45 @@ switch ($action) {
         $loserset1=filter_input(INPUT_POST, 'loserset1');
         $loserset2=filter_input(INPUT_POST, 'loserset2');
         $loserset3=filter_input(INPUT_POST, 'loserset3');
-
-        $theUser=new User();
-        $theUser->writeMatch($matchid, $matchdate, $winningplayer, $losingplayer, $winnerset1, $winnerset2, $winnerset3, $loserset1, $loserset2, $loserset3);
-            include ('View/profile.php');
-            break;
+        if($winningplayer!==$losingplayer)
+        {
+            if(strlen($matchid)!==0&&strlen($matchdate)!==0&&strlen($winningplayer)!==0&&strlen($losingplayer)!==0&&strlen($winnerset1)!==0&&strlen($winnerset2)!==0&&strlen($winnerset3)!==0&&strlen($loserset1)!==0&&strlen($loserset2)!==0&&strlen($loserset3)!==0&&($matchdate!=='mm/dd/yyyy')){
+                if(($winnerset1>5 and $winnerset2 >5) or ($winnerset2>5 and $winnerset3 >5) or ($winnerset1>5 and $winnerset3 >5)){
+                $theUser=new User();
+                $theUser->writeMatch($matchid, $matchdate, $winningplayer, $losingplayer, $winnerset1, $winnerset2, $winnerset3, $loserset1, $loserset2, $loserset3);
+                include ('View/profile.php');
+                break;
+            }
+                else{
+                    $player1=getMatchPlayers($matchid)['Player1'];
+                    $player1id=getMatchPlayers($matchid)['Player1Id'];
+                    $player2=getMatchPlayers($matchid)['Player2'];
+                    $player2id=getMatchPlayers($matchid)['Player2Id'];
+                    $errormatch='No one won the match.  Best 2 out of 3 sets.  Winner of each set must get to 6 games, else if it is 5-5, you must win by 2.  Please put in the correct score of finish the match at a later date';
+                include ('View/startresult.php');
+                break;
+                }
+            }
+            else{
+                $player1=getMatchPlayers($matchid)['Player1'];
+                $player1id=getMatchPlayers($matchid)['Player1Id'];
+                $player2=getMatchPlayers($matchid)['Player2'];
+                $player2id=getMatchPlayers($matchid)['Player2Id'];
+                $errormatch="Please make sure you entered all necessary data.  Make sure to add a date.";
+                include ('View/startresult.php');
+                break;
+            }
+        }
+        else{
+                $player1=getMatchPlayers($matchid)['Player1'];
+                $player1id=getMatchPlayers($matchid)['Player1Id'];
+                $player2=getMatchPlayers($matchid)['Player2'];
+                $player2id=getMatchPlayers($matchid)['Player2Id'];
+                $errormatch="One player can't be a winner and a loser.";
+                include ('View/startresult.php');
+                break;
+            }
+        
         
     case 'registration':
         include('View/registration.php');

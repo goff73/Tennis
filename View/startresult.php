@@ -17,19 +17,19 @@ include('header.php');
                 <div id="result">
                     <h2>Enter Results</h2>
                     
+                    <?php if(isset($errormatch)){echo $errormatch;} ?>
+                    
                     <form method="post" action="index.php">  
                         <input type="hidden" name="action" value="writeresult"> 
                         <label class="dateplayed" >Match Date:</label>
-                        <input class="dateplayed" type="date" name="matchdate" placeholder="mm/dd/yyyy">
-
+                        <input class="dateplayed" type="date" name="matchdate" placeholder="mm/dd/yyyy" value="<?php echo date("Y-m-d"); ?>">
+                        <label>Enter Winner:</label>
                         <select id="winner" name="winningplayer">                      
-                            <option value="0">--Select Winner--</option>
                             <option value="<?php echo $player1id ?>"><?php echo $player1 ?></option>
                             <option value="<?php echo $player2id ?>"><?php echo $player2 ?></option>
                         </select>
-
+                        <label>Enter Loser:</label>
                         <select id="loser" name="losingplayer">                      
-                            <option value="0">--Select Loser--</option>
                             <option value="<?php echo $player1id ?>"><?php echo $player1 ?></option>
                             <option value="<?php echo $player2id ?>"><?php echo $player2 ?></option>
                         </select>
