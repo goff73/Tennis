@@ -251,7 +251,9 @@ switch ($action) {
         $loserset3=filter_input(INPUT_POST, 'loserset3');
         if($winningplayer!==$losingplayer)
         {
-            if(strlen($matchid)!==0&&strlen($matchdate)!==0&&strlen($winningplayer)!==0&&strlen($losingplayer)!==0&&strlen($winnerset1)!==0&&strlen($winnerset2)!==0&&strlen($winnerset3)!==0&&strlen($loserset1)!==0&&strlen($loserset2)!==0&&strlen($loserset3)!==0&&($matchdate!=='mm/dd/yyyy')){
+            if(strlen($matchid)!==0&&strlen($matchdate)!==0&&strlen($winningplayer)!==0&&strlen($losingplayer)!==0&&(strlen($winnerset1)!==0
+                    &&strlen($winnerset2)!==0&&strlen($winnerset3)!==0&&strlen($loserset1)!==0&&strlen($loserset2)!==0&&strlen($loserset3)!==0||strlen($winnerset1)!==0
+                    &&strlen($winnerset2)!==0)&&($matchdate!=='mm/dd/yyyy')){
                 if(($winnerset1>5 and $winnerset2 >5) or ($winnerset2>5 and $winnerset3 >5) or ($winnerset1>5 and $winnerset3 >5)){
                 $theUser=new User();
                 $theUser->writeMatch($matchid, $matchdate, $winningplayer, $losingplayer, $winnerset1, $winnerset2, $winnerset3, $loserset1, $loserset2, $loserset3);
