@@ -22,7 +22,7 @@ include('header.php');
                     <form method="post" action="index.php">  
                         <input type="hidden" name="action" value="writeresult"> 
                         <label class="dateplayed" >Match Date:</label>
-                        <input class="dateplayed" type="date" name="matchdate" placeholder="mm/dd/yyyy" value="<?php echo date("Y-m-d"); ?>">
+                        <input class="dateplayed" type="date" name="matchdate" placeholder="mm/dd/yyyy" value="<?php echo $todaysdate; ?>">
                         <label>Enter Winner:</label>
                         <select id="winner" name="winningplayer">                      
                             <option value="<?php echo $player1id ?>"><?php echo $player1 ?></option>

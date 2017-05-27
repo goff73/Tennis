@@ -87,10 +87,12 @@ switch ($action) {
         break;
     case 'startresult':
         $matchid = filter_input(INPUT_POST, 'matchid');
-        $player1=getMatchPlayers($matchid)['Player1'];
-        $player1id=getMatchPlayers($matchid)['Player1Id'];
-        $player2=getMatchPlayers($matchid)['Player2'];
-        $player2id=getMatchPlayers($matchid)['Player2Id'];
+        $theUser = new User();
+        $player1=$theUser->getMatchDetails($matchid)['Player1'];
+        $player1id=$theUser->getMatchDetails($matchid)['Player1Id'];
+        $player2=$theUser->getMatchDetails($matchid)['Player2'];
+        $player2id=$theUser->getMatchDetails($matchid)['Player2Id'];
+        $todaysdate=date("Y-m-d");
         include('View/startresult.php');
         break;
     case 'writeresult':
@@ -110,6 +112,11 @@ switch ($action) {
                 if(($winnerset1>5 and $winnerset2 >5) or ($winnerset2>5 and $winnerset3 >5) or ($winnerset1>5 and $winnerset3 >5)){
                 $theUser=new User();
                 $theUser->writeMatch($matchid, $matchdate, $winningplayer, $losingplayer, $winnerset1, $winnerset2, $winnerset3, $loserset1, $loserset2, $loserset3);
+                $theUser = new User();
+                $leaderboardInfo=array();
+                $leaderboardInfo=$theUser->getLeaderboardInfo();
+                $scheduleInfo=array();
+                $scheduleInfo=$theUser->getScheduleInfo($_SESSION['Profile']['PlayerId']);
                 include ('View/profile.php');
                 break;
             }
@@ -118,6 +125,7 @@ switch ($action) {
                     $player1id=getMatchPlayers($matchid)['Player1Id'];
                     $player2=getMatchPlayers($matchid)['Player2'];
                     $player2id=getMatchPlayers($matchid)['Player2Id'];
+                    $todaysdate=date("Y-m-d");
                     $errormatch='No one won the match.  Best 2 out of 3 sets.  Winner of each set must get to 6 games, else if it is 5-5, you must win by 2.  Please put in the correct score of finish the match at a later date';
                 include ('View/startresult.php');
                 break;
@@ -128,6 +136,7 @@ switch ($action) {
                 $player1id=getMatchPlayers($matchid)['Player1Id'];
                 $player2=getMatchPlayers($matchid)['Player2'];
                 $player2id=getMatchPlayers($matchid)['Player2Id'];
+                $todaysdate=date("Y-m-d");
                 $errormatch="Please make sure you entered all necessary data.  Make sure to add a date.";
                 include ('View/startresult.php');
                 break;
@@ -138,11 +147,65 @@ switch ($action) {
                 $player1id=getMatchPlayers($matchid)['Player1Id'];
                 $player2=getMatchPlayers($matchid)['Player2'];
                 $player2id=getMatchPlayers($matchid)['Player2Id'];
+                $todaysdate=date("Y-m-d");
                 $errormatch="One player can't be a winner and a loser.";
                 include ('View/startresult.php');
                 break;
             }
+    case 'creatematch':
+        $theUser = new User();
+        $playerList=array();
+        $playerList=$theUser->getAllPlayers();
+        $todaysdate=date("Y-m-d");
+        include("View/matchcreator.php");
+        break;
         
+    case 'writematch':
+        $player1 = filter_input(INPUT_POST, 'player1');
+        $player2 = filter_input(INPUT_POST, 'player2');
+        $datetoplay=filter_input(INPUT_POST, 'datetoplay');
+        if($player1===$player2){
+            $errormatch='Please select two different players';
+            $theUser = new User();
+            $playerList=array();
+            $playerList=$theUser->getAllPlayers();
+            $todaysdate=date("Y-m-d");
+            include("View/matchcreator.php");
+            break;
+        }
+        if(strlen($player1)===0||strlen($player2)===0||strlen($datetoplay)===0&&date($datetoplay)){
+            $errormatch='Please make sure all values are filled in and with correct data.';
+            $theUser = new User();
+            $playerList=array();
+            $playerList=$theUser->getAllPlayers();
+            $todaysdate=date("Y-m-d");
+            include("View/matchcreator.php");
+            break;
+        }
+        if(getWriteNewMatch($player1, $player2, $datetoplay)){
+            $matchconfirmation='The match has been booked.';
+            $theUser = new User();
+            $playerList=array();
+            $playerList=$theUser->getAllPlayers();
+            $todaysdate=date("Y-m-d");
+            include("View/matchcreator.php");
+            break;
+        }
+        else{
+            $errormatch='An error has occured.  Please call your IT admin';
+            $theUser = new User();
+            $playerList=array();
+            $playerList=$theUser->getAllPlayers();
+            $todaysdate=date("Y-m-d");
+            include("View/matchcreator.php");
+            break;
+        }
+        
+        
+        include("View/matchcreator.php");
+        break;
+    
+    
         
     case 'registration':
         include('View/registration.php');
