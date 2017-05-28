@@ -166,10 +166,10 @@ switch ($action) {
                     $_SESSION['Profile']['Email']=$email_address;
                     $_SESSION['Profile']['Phone']=$phone;
                     $theUser = new User();
-                $leaderboardInfo=array();
-                $leaderboardInfo=$theUser->getLeaderboardInfo();
-                $scheduleInfo=array();
-                $scheduleInfo=$theUser->getScheduleInfo($_SESSION['Profile']['PlayerId']);
+                    $leaderboardInfo=array();
+                    $leaderboardInfo=$theUser->getLeaderboardInfo();
+                    $scheduleInfo=array();
+                    $scheduleInfo=$theUser->getScheduleInfo($_SESSION['Profile']['PlayerId']);
                     include('View/profile.php');
                     break;
                 }
@@ -212,7 +212,11 @@ switch ($action) {
             $_SESSION['Profile']['Phone']=$profile['Phone'];
             $_SESSION['Profile']['PlayerId']=$profile['PlayerId'];
             endforeach;
-            GrabProfileInfo();
+            $theUser = new User();
+            $leaderboardInfo=array();
+            $leaderboardInfo=$theUser->getLeaderboardInfo();
+            $scheduleInfo=array();
+            $scheduleInfo=$theUser->getScheduleInfo($_SESSION['Profile']['PlayerId']);
             include('View/profile.php');
             break;
         } else {
@@ -222,10 +226,10 @@ switch ($action) {
         }
     case 'profile':
         $theUser = new User();
-        $leaderboardInfo=array();
-        $leaderboardInfo=$theUser->getLeaderboardInfo();
-        $scheduleInfo=array();
-        $scheduleInfo=$theUser->getScheduleInfo($_SESSION['Profile']['PlayerId']);
+            $leaderboardInfo=array();
+            $leaderboardInfo=$theUser->getLeaderboardInfo();
+            $scheduleInfo=array();
+            $scheduleInfo=$theUser->getScheduleInfo($_SESSION['Profile']['PlayerId']);
         include('View/profile.php');
         break;
     case 'startresult':
@@ -257,11 +261,7 @@ switch ($action) {
                 if(($winnerset1>5 and $winnerset2 >5) or ($winnerset2>5 and $winnerset3 >5) or ($winnerset1>5 and $winnerset3 >5)){
                 $theUser=new User();
                 $theUser->writeMatch($matchid, $matchdate, $winningplayer, $losingplayer, $winnerset1, $winnerset2, $winnerset3, $loserset1, $loserset2, $loserset3);
-                $theUser = new User();
-                $leaderboardInfo=array();
-                $leaderboardInfo=$theUser->getLeaderboardInfo();
-                $scheduleInfo=array();
-                $scheduleInfo=$theUser->getScheduleInfo($_SESSION['Profile']['PlayerId']);
+                ShowProfileStats();
                 include ('View/profile.php');
                 break;
             }

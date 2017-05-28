@@ -21,7 +21,18 @@ label {
 #wrapper{
     margin-left: auto;
     margin-right: auto;
-    width: 600px;
+    width: 200px;
+    border: solid;
+    padding: 20px;
+    font-family: 'Palanquin Dark', sans-serif;
+    background-color: white;
+    float:left;
+}
+
+#wrapper2{
+    margin-left: 20%;
+    width: 33%;
+    float:left;
     border: solid;
     padding: 20px;
     font-family: 'Palanquin Dark', sans-serif;
@@ -43,3 +54,26 @@ input[type=submit] {
     width: 10em;
 }
 
+#leaderboard{
+    float:right;
+    width:25%;
+    border:solid;
+    padding: 10px;
+    background-color: white;
+}
+
+#schedule{
+    float:right;
+    width:50%;
+}
+footer{
+    clear:both;
+}
+
+th{
+    text-align:left;
+}
+
+h2{
+    font-family: 'Palanquin Dark', sans-serif;
+}

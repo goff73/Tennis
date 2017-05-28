@@ -11,7 +11,7 @@ include('header.php');
         <link href="https://fonts.googleapis.com/css?family=Palanquin+Dark" rel="stylesheet">
     </head>
     <body>
-        <div id="wrapper">
+        <div id="wrapper2">
         <h1>Login</h1>
         <form action="index.php?action=login" method="post">
             <label>User Name: </label>

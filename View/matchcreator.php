@@ -8,11 +8,12 @@ include('header.php');
     <head>
         <meta charset="UTF-8">
         <title>Create Matches</title>
+        <link rel="stylesheet" href="http://localhost/Tennis/View/nav.css">
         <link href="https://fonts.googleapis.com/css?family=Palanquin+Dark" rel="stylesheet">
     </head>
     <body>
 
-        <div id="wrapper">
+        <div id="wrapper2">
             <header>
                 <div id="result">
                     <h2>Create New Matches</h2>

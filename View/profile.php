@@ -8,51 +8,19 @@ include('header.php');
     <head>
         <meta charset="UTF-8">
         <title>Profile Page</title>
-        <!--        <link rel="stylesheet" type="text/css" href="http://localhost/17SPgroup4/stickman4/View/main.css"/>-->
+        <link rel="stylesheet" type="text/css" href="http://localhost/Tennis/View/main.css"/>
         <link href="https://fonts.googleapis.com/css?family=Palanquin+Dark" rel="stylesheet">
     </head>
     <body>
-
-        <div id="wrapper">
-            <header>
-                <div id="profile_pic">
-                    <h1><?php
+        
+        <h1><?php
                         if (isset($_SESSION['Profile']['UserName'])) {
-                            echo htmlspecialchars("Welcome ".$_SESSION['Profile']['FirstName'] . " " . $_SESSION['Profile']['LastName']);
+                            echo htmlspecialchars("Welcome " . $_SESSION['Profile']['FirstName'] . " " . $_SESSION['Profile']['LastName']);
                         }
                         ?></h1>
-
-                    <table>
-                        <tr> 
-                            <th>User Name: </th>
-                            <td><?php echo htmlspecialchars($_SESSION['Profile']['UserName']) ?></td>
-                        </tr>
-                        <tr>
-                            <th>First Name: </th>
-                            <td><?php echo htmlspecialchars($_SESSION['Profile']['FirstName']) ?></td>
-                        </tr>
-                        <tr>
-                            <th>Last Name: </th>
-                            <td><?php echo htmlspecialchars($_SESSION['Profile']['LastName']) ?></td>
-                        </tr>
-                        <tr>
-                            <th>Phone: </th>
-                            <td><?php echo htmlspecialchars($_SESSION['Profile']['Phone']) ?></td>
-                        </tr>
-                        <tr>
-                            <th>Email Address: </th>
-                            <td><?php echo htmlspecialchars($_SESSION['Profile']['EMail']) ?></td>
-                        </tr>
-                    </table>
-                    
-                    <p>
-                        <a href="index.php?action=initialedit"><?php if(isset($_SESSION['Profile']['UserName'])&&!empty($_SESSION['Profile']['UserName'])){echo htmlspecialchars('Edit Information');} ?></a>
-                    </p>
-
-                </div>
-
-
-                <div id='leaderboard'>
+        
+        
+        <div id="leaderboard">
                     <h2>Leaderboard</h2>
                     <table>
                         <tr>
@@ -71,12 +39,51 @@ include('header.php');
                                 <td><?php echo $wins; ?></td>
                                 <td><?php echo $losses; ?></td>
                             </tr>
-<?php endforeach; ?>
+                    <?php endforeach; ?>
                     </table>
 
                 </div>
 
-                <div id='schedule'>
+        <div id="wrapper">
+            <header>
+                <h2>Profile Information</h2>
+                    <table>
+                        <tr> 
+                            <td><?php echo htmlspecialchars($_SESSION['Profile']['UserName']) ?></td>
+                        </tr>
+                        <tr>
+                            <td><?php echo htmlspecialchars($_SESSION['Profile']['FirstName']) ?></td>
+                        </tr>
+                        <tr>
+                            <td><?php echo htmlspecialchars($_SESSION['Profile']['LastName']) ?></td>
+                        </tr>
+                        <tr>
+                            <td><?php echo htmlspecialchars($_SESSION['Profile']['Phone']) ?></td>
+                        </tr>
+                        <tr>
+                            <td><?php echo htmlspecialchars($_SESSION['Profile']['EMail']) ?></td>
+                        </tr>
+                    </table>
+
+                    <p>
+                        <a href="index.php?action=initialedit"><?php if (isset($_SESSION['Profile']['UserName']) && !empty($_SESSION['Profile']['UserName'])) {
+                            echo htmlspecialchars('Edit Information');
+                        } ?></a>
+                    </p>
+
+
+
+                
+
+                
+
+            </header>
+            <main>
+
+            </main>
+        </div>
+
+        <div id="schedule">
                     <h2>Schedule</h2>
                     <table>
                         <tr>
@@ -90,40 +97,36 @@ include('header.php');
                             <?php
                             foreach ($scheduleInfo as $inList):
                                 $matchid = htmlspecialchars($inList['MatchId']);
-                                $matchdate = htmlspecialchars($inList['MatchDate']);
+                                //date formatting issues https://www.youtube.com/watch?v=ZomK0WiIArs
+                                $matchdate = htmlspecialchars(strtotime($inList['MatchDate']));
+                                $matchdate= htmlspecialchars(date('M-d-Y',$matchdate));
                                 $opponent = htmlspecialchars($inList['Opponent']);
-                                $opponentphone=htmlspecialchars($inList['OpponentPhone']);
-                                $opponentemail=htmlspecialchars($inList['OpponentEMail']);
+                                $opponentphone = htmlspecialchars($inList['OpponentPhone']);
+                                $opponentemail = htmlspecialchars($inList['OpponentEMail']);
                                 $result = htmlspecialchars($inList['Result']);
                                 ?>
                                 <td><?php echo $matchdate; ?></td>
                                 <td><?php echo $opponent; ?></td>
                                 <td><?php
-                                if (strpos($result, 'enter') === false) {
-                                    echo $result;
-                                } else {
-                                    echo '<form action="index.php" method="post">
+                                    if (strpos($result, 'enter') === false) {
+                                        echo $result;
+                                    } else {
+                                        echo '<form action="index.php" method="post">
                                             <input type="hidden" name="action" value="startresult"> 
-                                            <input type="hidden" name="matchid" value="'.$matchid.'">
-                                            <input type="submit" value="enter" name="enter">
+                                            <input type="hidden" name="matchid" value="' . $matchid . '">
+                                            <input type="submit" value="Enter Score" name="Enter Score">
                                         </form>';
-                                }
-                                ?>
+                                    }
+                                    ?>
                                 </td>
-                                <td><?php echo $opponentemail?></td>
-                                <td><?php echo $opponentphone?></td>
+                                <td><?php echo $opponentemail ?></td>
+                                <td><?php echo $opponentphone ?></td>
                             </tr>
 <?php endforeach; ?>
                     </table>
 
                 </div>
-
-            </header>
-            <main>
-
-            </main>
-        </div>
-
+        
 <?php include 'view/footer.php'; ?>
     </body>
 </html>

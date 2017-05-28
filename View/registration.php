@@ -11,7 +11,7 @@ include('header.php');
         <link href="https://fonts.googleapis.com/css?family=Palanquin+Dark" rel="stylesheet">
     </head>
     <body>
-        <div id="wrapper">
+        <div id="wrapper2">
             <h1>New User Registration</h1>
             <p class="error">
                 <?php
