@@ -10,7 +10,7 @@ include 'header.php';
         <link href="https://fonts.googleapis.com/css?family=Palanquin+Dark" rel="stylesheet">
     </head>
     <body>
-        <div id="wrapper">
+        <div id="wrapper2">
             <main>
                 <h1>New Account Confirmation</h1>
 

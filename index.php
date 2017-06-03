@@ -25,9 +25,11 @@ if ($action === NULL) {
 
 
 switch ($action) {
+    //first page when you login
     case 'initiallogin':
         include 'View/login.php';
         break;
+    //clear the session variables when logging out
     case 'logout':
         $_SESSION['Profile']['UserName']="";
             $_SESSION['Profile']['FirstName']="";
@@ -38,11 +40,124 @@ switch ($action) {
             $_SESSION['Profile']['PlayerId']="";
         include('View/login.php');
         break;
-    
+    //edit profile view
     case 'initialedit':
         include 'View/changeinfo.php';
         break;
-    
+    //view match disputes lists from players
+    case 'viewdisputes':
+        $theUser = new User();
+        $disputeInfo=array();
+        $disputeInfo=$theUser->getAllMatchDisputes();
+        include 'View/viewdisputes.php';
+        break;
+    //fill match change from match dispute
+    case 'changematch':
+        $matchid = filter_input(INPUT_POST, 'matchid');
+        $theUser = new User();
+        $matchInfo=array();
+        $matchInfo=$theUser->getTheMatch($matchid);
+        $dateplayed=$matchInfo['MatchDate'];
+        $player1=$matchInfo['player1'];
+        $player2=$matchInfo['player2'];
+        $winnerset1=$matchInfo['WinnerSet1'];
+        $winnerset2=$matchInfo['WinnerSet2'];
+        $winnerset3=$matchInfo['WinnerSet3'];
+        $loserset1=$matchInfo['LoserSet1'];
+        $loserset2=$matchInfo['LoserSet2'];
+        $loserset3=$matchInfo['LoserSet3'];
+        $player1id=$matchInfo['player1id'];
+        $player2id=$matchInfo['player2id'];
+        include 'View/matchchange.php';
+        break;
+    //allow player to dispute a match, stay in profile dashboard
+    case 'dispute':
+        $matchid = filter_input(INPUT_POST, 'matchid');
+        $opponent= filter_input(INPUT_POST, 'opponent');
+        $player= filter_input(INPUT_POST, 'player');
+        $date=filter_input(INPUT_POST, 'date');
+        $message='Review match on '.$date.' between '.$player.' and '.$opponent;
+        if(isset($matchid)&&isset($date)&&isset($opponent)&&isset($player)){
+            $disputeMessage=$player.". Your match between ".$opponent." on ".$date." has been sent to the league director Justin.  Expect a response within one week.  We will contact ".$opponent.".";
+            $theUser = new User();
+            $theUser->writeDispute($matchid, $date, $message);
+                        $theUser = new User();
+            $leaderboardInfo=array();
+            $leaderboardInfo=$theUser->getLeaderboardInfo();
+            $scheduleInfo=array();
+            $scheduleInfo=$theUser->getScheduleInfo($_SESSION['Profile']['PlayerId']);
+            include('View/profile.php');
+            break;
+        }
+        else{
+            $disputeMessage="We had an issue sending your request.  Please e-mail Justin at justin@gmail.com";
+                        $theUser = new User();
+            $leaderboardInfo=array();
+            $leaderboardInfo=$theUser->getLeaderboardInfo();
+            $scheduleInfo=array();
+            $scheduleInfo=$theUser->getScheduleInfo($_SESSION['Profile']['PlayerId']);
+            include('View/profile.php');
+            break;
+        }
+    //fix match.  admin only.
+    case 'finishdispute':
+        $matchid = filter_input(INPUT_POST, 'matchid');
+        $matchdate = filter_input(INPUT_POST, 'matchdate');
+        $winningplayer=filter_input(INPUT_POST, 'winningplayer');
+        $losingplayer=filter_input(INPUT_POST, 'losingplayer');
+        $winnerset1=filter_input(INPUT_POST, 'winnerset1');
+        $winnerset2=filter_input(INPUT_POST, 'winnerset2');
+        $winnerset3=filter_input(INPUT_POST, 'winnerset3');
+        $loserset1=filter_input(INPUT_POST, 'loserset1');
+        $loserset2=filter_input(INPUT_POST, 'loserset2');
+        $loserset3=filter_input(INPUT_POST, 'loserset3');
+        if($winningplayer!==$losingplayer)
+        {
+            if(strlen($matchid)!==0&&strlen($matchdate)!==0&&strlen($winningplayer)!==0&&strlen($losingplayer)!==0&&(strlen($winnerset1)!==0
+                    &&strlen($winnerset2)!==0&&strlen($winnerset3)!==0&&strlen($loserset1)!==0&&strlen($loserset2)!==0&&strlen($loserset3)!==0||strlen($winnerset1)!==0
+                    &&strlen($winnerset2)!==0)&&($matchdate!=='mm/dd/yyyy')){
+                if(($winnerset1>5 and $winnerset2 >5) or ($winnerset2>5 and $winnerset3 >5) or ($winnerset1>5 and $winnerset3 >5)){
+                $theUser=new User();
+                $theUser->writeMatch($matchid, $matchdate, $winningplayer, $losingplayer, $winnerset1, $winnerset2, $winnerset3, $loserset1, $loserset2, $loserset3);
+                $theUser->deleteTheDispute($matchid);
+                $disputeInfo=array();
+                $disputeInfo=$theUser->getAllMatchDisputes();
+                include 'View/viewdisputes.php';
+                break;
+            }
+                else{
+                    $player1=getMatchPlayers($matchid)['Player1'];
+                    $player1id=getMatchPlayers($matchid)['Player1Id'];
+                    $player2=getMatchPlayers($matchid)['Player2'];
+                    $player2id=getMatchPlayers($matchid)['Player2Id'];
+                    $dateplayed=$matchdate;
+                    $errormatch='No one won the match.  Best 2 out of 3 sets.  Winner of each set must get to 6 games, else if it is 5-5, you must win by 2.';
+                include ('View/matchchange.php');
+                break;
+                }
+            }
+            else{
+                $player1=getMatchPlayers($matchid)['Player1'];
+                $player1id=getMatchPlayers($matchid)['Player1Id'];
+                $player2=getMatchPlayers($matchid)['Player2'];
+                $player2id=getMatchPlayers($matchid)['Player2Id'];
+                $dateplayed=$matchdate;
+                $errormatch="Please make sure you entered all necessary data.  Make sure to add a date.";
+                include ('View/matchchange.php');
+                break;
+            }
+        }
+        else{
+                $player1=getMatchPlayers($matchid)['Player1'];
+                $player1id=getMatchPlayers($matchid)['Player1Id'];
+                $player2=getMatchPlayers($matchid)['Player2'];
+                $player2id=getMatchPlayers($matchid)['Player2Id'];
+                $dateplayed=$matchdate;
+                $errormatch="One player can't be a winner and a loser.";
+                include ('View/matchchange.php');
+                break;
+            }
+    //edit the profile info.  Used Quentin's Regular expression/topologies code!  Do not include this in grade.
     case 'edit':
             //grabbing values from page
             $first_name = filter_input(INPUT_POST, 'first_name');
@@ -73,7 +188,6 @@ switch ($action) {
         }
         else{
             $bPregCheck = true;
-            //this needs to be reviewed.  Where it says it needs a number for the password.
             if(!preg_match('/[A-Z]/',$password))
             {
                 
@@ -181,7 +295,7 @@ switch ($action) {
                 }
                 
             }
-
+    //login to fill profile session variables
     case 'login':
         $user_name = filter_input(INPUT_POST, 'user_name');
         $password = filter_input(INPUT_POST, 'password');
@@ -224,6 +338,7 @@ switch ($action) {
             include('View/login.php');
             break;
         }
+        // view profile after logging in
     case 'profile':
         $theUser = new User();
             $leaderboardInfo=array();
@@ -232,6 +347,7 @@ switch ($action) {
             $scheduleInfo=$theUser->getScheduleInfo($_SESSION['Profile']['PlayerId']);
         include('View/profile.php');
         break;
+    //show view to write score of match played
     case 'startresult':
         $matchid = filter_input(INPUT_POST, 'matchid');
         $theUser = new User();
@@ -242,6 +358,7 @@ switch ($action) {
         $todaysdate=date("Y-m-d");
         include('View/startresult.php');
         break;
+    //write match results to database
     case 'writeresult':
         $matchid = filter_input(INPUT_POST, 'matchid');
         $matchdate = filter_input(INPUT_POST, 'matchdate');
@@ -261,7 +378,11 @@ switch ($action) {
                 if(($winnerset1>5 and $winnerset2 >5) or ($winnerset2>5 and $winnerset3 >5) or ($winnerset1>5 and $winnerset3 >5)){
                 $theUser=new User();
                 $theUser->writeMatch($matchid, $matchdate, $winningplayer, $losingplayer, $winnerset1, $winnerset2, $winnerset3, $loserset1, $loserset2, $loserset3);
-                ShowProfileStats();
+                                    $theUser = new User();
+                    $leaderboardInfo=array();
+                    $leaderboardInfo=$theUser->getLeaderboardInfo();
+                    $scheduleInfo=array();
+                    $scheduleInfo=$theUser->getScheduleInfo($_SESSION['Profile']['PlayerId']);
                 include ('View/profile.php');
                 break;
             }
@@ -271,7 +392,7 @@ switch ($action) {
                     $player2=getMatchPlayers($matchid)['Player2'];
                     $player2id=getMatchPlayers($matchid)['Player2Id'];
                     $todaysdate=date("Y-m-d");
-                    $errormatch='No one won the match.  Best 2 out of 3 sets.  Winner of each set must get to 6 games, else if it is 5-5, you must win by 2.  Please put in the correct score of finish the match at a later date';
+                    $errormatch='No one won the match.  Best 2 out of 3 sets.  Winner of each set must get to 6 games, else if it is 5-5, you must win by 2.  Please put in the correct score or finish the match at a later date';
                 include ('View/startresult.php');
                 break;
                 }
@@ -297,6 +418,7 @@ switch ($action) {
                 include ('View/startresult.php');
                 break;
             }
+    //view to create a new match
     case 'creatematch':
         $theUser = new User();
         $playerList=array();
@@ -304,7 +426,7 @@ switch ($action) {
         $todaysdate=date("Y-m-d");
         include("View/matchcreator.php");
         break;
-        
+    //write the new match to be played  
     case 'writematch':
         $player1 = filter_input(INPUT_POST, 'player1');
         $player2 = filter_input(INPUT_POST, 'player2');
@@ -351,10 +473,11 @@ switch ($action) {
         break;
     
     
-        
+    //register the new profile    
     case 'registration':
         include('View/registration.php');
         break;
+    //write the player to the player table in the database
     case 'confirmation':
         $first_name = filter_input(INPUT_POST, 'first_name');
         $last_name = filter_input(INPUT_POST, 'last_name');

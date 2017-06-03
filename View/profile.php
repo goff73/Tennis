@@ -18,8 +18,7 @@ include('header.php');
                             echo htmlspecialchars("Welcome " . $_SESSION['Profile']['FirstName'] . " " . $_SESSION['Profile']['LastName']);
                         }
                         ?></h1>
-        
-        
+
         <div id="leaderboard">
                     <h2>Leaderboard</h2>
                     <table>
@@ -85,11 +84,15 @@ include('header.php');
 
         <div id="schedule">
                     <h2>Schedule</h2>
+                    <?php if(isset($disputeMessage)){echo $disputeMessage;} ?>
                     <table>
                         <tr>
                             <th>Match Date</th>
                             <th>Opponent</th>
                             <th>Result</th>
+                            <th>Set 1</th>
+                            <th>Set 2</th>
+                            <th>Set 3</th>
                             <th>Email</th>
                             <th>Phone</th>
                         </tr>
@@ -104,6 +107,9 @@ include('header.php');
                                 $opponentphone = htmlspecialchars($inList['OpponentPhone']);
                                 $opponentemail = htmlspecialchars($inList['OpponentEMail']);
                                 $result = htmlspecialchars($inList['Result']);
+                                $set1= htmlspecialchars($inList['Set1']);
+                                $set2= htmlspecialchars($inList['Set2']);
+                                $set3= htmlspecialchars($inList['Set3']);
                                 ?>
                                 <td><?php echo $matchdate; ?></td>
                                 <td><?php echo $opponent; ?></td>
@@ -119,8 +125,21 @@ include('header.php');
                                     }
                                     ?>
                                 </td>
+                                <td><?php echo $set1 ?></td>
+                                <td><?php echo $set2 ?></td>
+                                <td><?php echo $set3 ?></td>
                                 <td><?php echo $opponentemail ?></td>
                                 <td><?php echo $opponentphone ?></td>
+                                <td><?php if ($inList['Set1']!=='0-0') : ?>
+                                    <form action="index.php" method="post">
+                                        <input type="hidden" name="action" value="dispute">
+                                        <input type="hidden" name="matchid" value="<?php echo htmlspecialchars($matchid) ?>">
+                                        <input type="hidden" name="opponent" value="<?php echo htmlspecialchars($opponent) ?>">
+                                        <input type="hidden" name="date" value="<?php echo htmlspecialchars($matchdate) ?>">
+                                        <input type="hidden" name="player" value="<?php echo htmlspecialchars($_SESSION['Profile']['FirstName']." ".$_SESSION['Profile']['LastName']) ?>">
+                                        <input type="submit" value="Dispute" name="Dispute">
+                                    </form>
+                                    <?php endif ?>
                             </tr>
 <?php endforeach; ?>
                     </table>

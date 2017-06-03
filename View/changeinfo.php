@@ -8,7 +8,7 @@ include('header.php');
 <head>
         <meta charset="UTF-8">
         <title>Change Info Page</title>
-        <link rel="stylesheet" type="text/css" href="/Tennis/View/main.css"/>
+        <link rel="stylesheet" type="text/css" href="http://localhost/Tennis/View/main.css"/>
         <link href="https://fonts.googleapis.com/css?family=Palanquin+Dark" rel="stylesheet">
     </head>
     <body>
@@ -24,7 +24,7 @@ include('header.php');
                 ?>
             </p>
 
-        <div id="wrapper">
+        <div id="wrapper2">
             <form action="index.php?action=changeinfo" method="post">
                 <label>First Name: </label>
                 <input type="text" name="first_name" class="textboxes" value="<?php if (isset($_SESSION['Profile']['FirstName'])) {
